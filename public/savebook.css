@@ -1,0 +1,11 @@
+.star {
+    font-size: 2.5rem;
+    color: rgb(243, 219, 81) !important;
+    cursor: pointer;
+  }
+  .star.active {
+    color: rgb(223, 162, 10) !important;
+  }
+    .star:hover {
+        color: gold !important;
+    }

@@ -1,0 +1,50 @@
+body {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+    margin: 2px;
+  }
+  ul {
+    list-style: none;
+    padding: 0;
+  }
+  li {
+    border: 1px solid #ccc;
+    margin-bottom: 10px;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+  }
+  img {
+    margin-right: 20px;
+  }
+  form {
+    margin-left: auto;
+  }
+  .card {
+    width: 300px;
+    margin: 10px;
+    display: inline-block;
+    vertical-align: top;
+  }
+  .card-img {
+    height: 300px;
+    object-fit: cover;
+    /* Optionally, adjust opacity so overlay text stands out */
+    opacity: 0.85;
+  }
+  .card-img-overlay {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    background: rgba(0, 0, 0, 0.4); /* dark overlay */
+    padding: 15px;
+  }
+  .card-title,
+  .card-text {
+    margin: 0;
+  }
+
+  /*Save books ejs*/
+
+  /* Style for the star rating display */
+ 

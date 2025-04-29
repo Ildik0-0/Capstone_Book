@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Save Book Details</title>
+  <link rel="stylesheet" href="savebook.css">
+  <!-- Bootstrap CSS CDN (optional) -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+  <div class="container mt-4">
+    <h1>Save Book</h1>
+    <div class="mb-3">
+      <h3><%= title %></h3>
+      <p><strong>Author:</strong> <%= author %></p>
+      <p><strong>Publisher:</strong> <%= publisher %></p>
+      <img src="<%= cover %>" alt="<%= title %> Cover" style="width:200px;object-fit:cover;">
+    </div>
+    
+    <form action="/savebook" method="post">
+      <!-- Hidden inputs to retain pre-filled data -->
+      <input type="hidden" name="title" value="<%= title %>">
+      <input type="hidden" name="author" value="<%= author %>">
+      <input type="hidden" name="isbn" value="<%= isbn %>">
+      <input type="hidden" name="cover" value="<%= cover %>">
+      <input type="hidden" name="publisher" value="<%= publisher %>">
+      
+      <!-- Input for rating --><!--<input type="number" class="form-control" id="rating" name="rating" min="1" max="5" required>-->
+       <!-- Hidden rating input -->
+       <input type="hidden" id="ratingInput" name="rating" value="0">
+      
+       <!-- Star rating interface -->
+       <div class="form-group">
+         <label for="rating">Rating (click on the stars):</label>
+         <div class="rating">
+           <span class="star" data-value="1">★</span>
+           <span class="star" data-value="2">★</span>
+           <span class="star" data-value="3">★</span>
+           <span class="star" data-value="4">★</span>
+           <span class="star" data-value="5">★</span>
+         </div>
+       </div>
+ 
+
+      
+      <!-- Textarea for note -->
+      <div class="form-group">
+        <label for="notes">Note:</label>
+        <textarea name="notes" id="notes" class="form-control" rows="4" required></textarea>
+      </div>
+      
+      <button type="submit" class="btn btn-success">Save Book</button>
+    </form>
+  </div>
+
+  <script src="js/savebook.js"></script>
+</body>
+</html>
