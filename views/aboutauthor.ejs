@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Authors</title>
+  <!-- Using Bootstrap 5.3.5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" 
+        integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
+  <link rel="stylesheet" href="css/authors.css">
+</head>
+<body>
+  <%- include('partials/nav') %>
+
+  <div class="container mt-4">
+    <h1>Authors</h1>
+    <div class="d-flex flex-wrap justify-content-center">
+      <% if (authors && authors.length > 0) { %>
+        <% authors.forEach(author => { 
+             // Remove the "/authors/" prefix from the key to get the OLID.
+             const olid = author.key.replace('/authors/', '');
+             // Construct the image URL from the Open Library Covers API.
+             const imageUrl = `https://covers.openlibrary.org/a/olid/${olid}-M.jpg`;
+        %>
+          <div class="card text-bg-dark m-2" style="width: 18rem;">
+            <img src="<%= imageUrl %>" class="card-img" alt="Image of <%= author.name %>">
+            <div class="card-img-overlay">
+              <h5 class="card-title"><%= author.name %></h5>
+              <p class="card-text">
+                <% if (author.birth_date) { %>
+                  <small>Birth Date: <%= author.birth_date %></small><br>
+                <% } %>
+                <% if (author.top_work) { %>
+                  <small>Top Work: <%= author.top_work %></small><br>
+                <% } %>
+                <% if (author.work_count) { %>
+                  <small>Works: <%= author.work_count %></small>
+                <% } %>
+              </p>
+              <a href="/author/<%= olid %>" class="btn btn-primary btn-sm">
+                More Details
+              </a>
+
+            </div>
+          </div>
+        <% }); %>
+      <% } else { %>
+        <p>No authors found.</p>
+      <% } %>
+    </div>
+  </div>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" 
+          integrity="sha384-qQ2IYbvd84yPdqVbSCNaL+s/jDyyZg7a7r4nuyMesZLkwZBJv+f5OFrcjEQqJpA6" 
+          crossorigin="anonymous"></script>
+  <script src="/js/authors.js"></script>
+</body>
+</html>

@@ -2,9 +2,12 @@ body {
     font-family: Arial, sans-serif;
     
   }
- 
-  
-  .card {
+
+small{
+    margin: 2px;
+}
+
+.card {
     width: 300px;
     margin: 10px;
     display: inline-block;

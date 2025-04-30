@@ -79,6 +79,106 @@ app.get("/", async (req, res) => {
   }
 });
 
+//Route to fetch author details
+
+
+app.get("/authors", async (req, res) => {
+  // If a user specified a search term, use it. Otherwise, use a default query (e.g., "a").
+  const query = req.query.q || "a";
+  const apiUrl = `https://openlibrary.org/search/authors.json?q=${encodeURIComponent(query)}`;
+
+  try {
+    const response = await axios.get(apiUrl);
+    // The API returns author objects under the "docs" property.
+    const authors = response.data.docs;
+    // Render the aboutauthor.ejs template, passing the authors array.
+    res.render("aboutauthor.ejs", { authors, query });
+  } catch (error) {
+    console.error("Error fetching authors:", error);
+    res.status(500).send("Error fetching authors. Please try again.");
+  }
+});
+
+
+
+  app.get("/author/:id", async (req, res) => {
+    const authorId = req.params.id; // Example: "OL23919A"
+    const page = parseInt(req.query.page, 10) || 1; // Default to page 1
+    const worksPerPage = 20;
+  
+    const searchUrl = `https://openlibrary.org/search.json?q=${encodeURIComponent(authorId)}&page=${page}`;
+    const authorDetailsUrl = `https://openlibrary.org/authors/${authorId}.json`;
+  
+    try {
+      // Fetch both author details and search results (works)
+      const [searchResponse, authorResponse] = await Promise.all([
+        axios.get(searchUrl),
+        axios.get(authorDetailsUrl),
+      ]);
+  
+      const authorData = authorResponse.data; // Author details
+      const results = searchResponse.data.docs; // Results from search API
+  
+      // Extract relevant data from works
+      const works = results.slice(0, worksPerPage).map((work) => {
+        let coverUrl;
+        if (work.cover_i) {
+          coverUrl = `https://covers.openlibrary.org/b/id/${work.cover_i}-L.jpg`;
+        } else if (work.isbn && work.isbn.length > 0) {
+          coverUrl = `https://covers.openlibrary.org/b/isbn/${work.isbn[0]}-L.jpg`;
+        } else {
+          coverUrl = "/images/placeholder.jpg"; // Fallback for missing covers
+        }
+        return {
+          title: work.title,
+          author: work.author_name ? work.author_name[0] : "Unknown",
+          cover: coverUrl,
+        };
+      });
+  
+      // Compute author cover image
+      const authorCoverUrl = authorData.key
+  ? `https://covers.openlibrary.org/a/olid/${authorData.key.replace('/authors/', '')}-L.jpg`
+  : '/images/placeholder.jpg';
+  
+      // Pagination details
+      const totalWorks = searchResponse.data.numFound;
+      const totalPages = Math.ceil(totalWorks / worksPerPage);
+  
+      // Render EJS template with works, author details, and pagination info
+      console.log("Author Cover URL:", authorCoverUrl);
+     
+      res.render("authorid.ejs", {
+        works,
+        authorCover: authorCoverUrl,
+        authorName: authorData.name,
+        authorBio: typeof authorData.bio === "object" ? authorData.bio?.value : authorData.bio,
+        currentPage: page,
+        totalPages,
+        totalWorks,
+        authorId,
+      });
+    } catch (error) {
+      console.error("Error fetching author details or works:", error);
+      res.status(500).send("Error fetching author details. Please try again.");
+    }
+  });
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // POST route to save a selected book to the database
 app.post("/save", async (req, res) => {
   const { title, author, isbn, cover } = req.body;
@@ -103,7 +203,8 @@ app.get("/savebook", (req, res) => {
   });
 
 
-
+//---------------------------------------------------------------------------------------------------------------------
+  // CRUD operations for the saved books
 // POST /savebook - Save the complete book info (with rating and note) to the database
 app.post("/savebook", async (req, res) => {
     const { title, author, isbn, cover, publisher, rating, notes } = req.body;
@@ -178,6 +279,25 @@ app.get('/editbook/:id', async (req, res) => {
       res.status(500).send("Error deleting book. Please try again."); // Send error response
     }
   });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // Start the Express server
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
